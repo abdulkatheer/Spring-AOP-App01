@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+   <!-- Beans -->
+   <bean id="employee1" class="org.katheer.bean.Employee">
+      <property name="eid" value="101"/>
+      <property name="name" value="Abdul"/>
+      <property name="mobile" value="91-8220644661"/>
+      <property name="email" value="abdul@ig.com"/>
+      <property name="sal" value="62500"/>
+      <property name="place" value="Bangalore"/>
+   </bean>
+
+   <bean id="employee2" class="org.katheer.bean.Employee">
+      <property name="eid" value="102"/>
+      <property name="name" value="Manasa"/>
+      <property name="mobile" value="91-8398382938"/>
+      <property name="email" value="manasa@ig.com"/>
+      <property name="sal" value="70000"/>
+      <property name="place" value="Chennai"/>
+   </bean>
+
+   <!-- Target -->
+   <bean id="empService" class="org.katheer.service.EmployeeServiceImpl"/>
+
+   <!-- Advice -->
+   <bean id="advice" class="org.katheer.advice.validation.EmployeeValidatorAdvice"/>
+
+   <!-- Pointcut -->
+   <bean id="pointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+      <property name="mappedNames">
+         <list>
+            <value>getEmployeeDetails</value>
+            <value>displayEmployeeDetails</value>
+         </list>
+      </property>
+   </bean>
+
+   <!-- Advisor = Pointcut + Advice-->
+   <bean id="advisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+      <property name="pointcut" ref="pointcut"/>
+      <property name="advice" ref="advice"/>
+   </bean>
+
+   <!-- Proxy = Target + Advisor(Pointcut + Advice) -->
+   <bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+      <property name="target" ref="empService"/>
+      <property name="interceptorNames">
+         <list>
+            <value>advisor</value>
+         </list>
+      </property>
+   </bean>
+</beans>
